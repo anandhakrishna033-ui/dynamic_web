@@ -21,6 +21,7 @@
             background-color: var(--bg-cream);
             color: var(--text-dark);
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden; /* Prevents horizontal scroll from animations */
         }
 
         /* Minimalist, Elegant Header */
@@ -104,6 +105,32 @@
             color: var(--text-dark);
         }
 
+        /* NEW: Marquee Animation */
+        .marquee-container {
+            background: var(--text-dark);
+            color: #f39c12;
+            padding: 15px 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            animation: scrollText 20s linear infinite;
+        }
+
+        .marquee-content span {
+            margin: 0 40px;
+            font-weight: 600;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         /* Story / Intro Section */
         .intro-section {
             padding: 120px 20px;
@@ -125,7 +152,7 @@
             color: #555;
         }
 
-        /* Product Grid (The Core Visual) */
+        /* Product Grid */
         .product-grid-container {
             padding: 0 50px 100px 50px;
         }
@@ -164,16 +191,17 @@
             width: 100%;
             height: 400px;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.7s ease;
         }
 
         .img-wrapper {
             overflow: hidden;
             margin-bottom: 20px;
+            border-radius: 4px;
         }
 
         .product-card:hover img {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         .product-card h3 {
@@ -190,6 +218,83 @@
             letter-spacing: 1px;
         }
 
+        /* NEW: Testimonial Section */
+        .testimonial-section {
+            background-color: #f2eee8;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .testimonial-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .testimonial-content .quote {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--text-dark);
+            font-style: italic;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .testimonial-content .author {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #777;
+            font-weight: 600;
+        }
+
+        /* NEW: Newsletter CTA */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .newsletter-form input {
+            padding: 15px 20px;
+            width: 300px;
+            border: 1px solid #ccc;
+            font-family: var(--font-body);
+            outline: none;
+            border-radius: 4px;
+        }
+
+        .cta-btn-solid {
+            background: var(--text-dark);
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .cta-btn-solid:hover {
+            background: var(--accent-warm);
+        }
+
         /* Footer */
         footer {
             background-color: var(--text-dark);
@@ -202,6 +307,34 @@
             font-family: var(--font-heading);
             font-size: 2rem;
             margin-bottom: 20px;
+        }
+
+        /* --- MAGIC ANIMATION CLASSES --- */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUpAnim 1.2s ease forwards;
+        }
+
+        @keyframes fadeInUpAnim { 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        /* Scroll Reveal Base State */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.9s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        /* Triggered by JS */
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -218,38 +351,45 @@
     </header>
 
     <section class="hero">
-        <p>Honest Ingredients. Time-Honoured Techniques.</p>
-        <h1>Artisanal Excellence</h1>
-        <a href="menu.html" class="cta-btn-outline">Explore Our Menu</a>
+        <p class="fade-in-up delay-1">Honest Ingredients. Time-Honoured Techniques.</p>
+        <h1 class="fade-in-up delay-2">Artisanal Excellence</h1>
+        <a href="menu.html" class="cta-btn-outline fade-in-up delay-3">Explore Our Menu</a>
     </section>
 
-    <section class="intro-section">
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span>FRESHLY BAKED DAILY</span> • <span>100% ORGANIC FLOUR</span> • <span>NATURALLY LEAVENED</span> • <span>NO ARTIFICIAL PRESERVATIVES</span> • 
+            <span>FRESHLY BAKED DAILY</span> • <span>100% ORGANIC FLOUR</span> • <span>NATURALLY LEAVENED</span> • <span>NO ARTIFICIAL PRESERVATIVES</span> •
+        </div>
+    </div>
+
+    <section class="intro-section reveal">
         <h2>Baked with Passion. Built on Tradition.</h2>
         <p>At Daily Crumbs, we believe that great baking starts with a simple philosophy: craft every product as if it were for someone you love. From our slow-fermented sourdoughs to our delicate, hand-laminated pastries, our methods are rooted in authentic European tradition.</p>
     </section>
 
     <section class="product-grid-container">
-        <div class="grid-header">
+        <div class="grid-header reveal">
             <span>Our Bestsellers</span>
             <h2>Pure Joy, Baked In.</h2>
         </div>
         
         <div class="product-grid">
-            <div class="product-card">
+            <div class="product-card reveal delay-1">
                 <div class="img-wrapper">
                     <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=600" alt="Viennoiserie">
                 </div>
                 <h3>Viennoiserie</h3>
                 <p>Flaky & Buttery</p>
             </div>
-            <div class="product-card">
+            <div class="product-card reveal delay-2">
                 <div class="img-wrapper">
                     <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?q=80&w=600" alt="Artisan Bread">
                 </div>
                 <h3>Artisan Loaves</h3>
                 <p>Slow-Fermented</p>
             </div>
-            <div class="product-card">
+            <div class="product-card reveal delay-3">
                 <div class="img-wrapper">
                     <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=600" alt="Cakes & Traybakes">
                 </div>
@@ -259,10 +399,46 @@
         </div>
     </section>
 
+    <section class="testimonial-section reveal">
+        <div class="testimonial-content">
+            <p class="quote">"The best sourdough I have ever tasted outside of Paris. The crust is perfectly blistered, and the crumb is incredibly soft. Daily Crumbs is a true gem."</p>
+            <p class="author">— Sarah Jenkins, Local Food Critic</p>
+        </div>
+    </section>
+
+    <section class="cta-section reveal">
+        <h2>Join the Crumb Club</h2>
+        <p>Subscribe for seasonal menus, baking tips, and exclusive offers.</p>
+        <div class="newsletter-form">
+            <input type="email" placeholder="Enter your email address">
+            <button class="cta-btn-solid">Subscribe</button>
+        </div>
+    </section>
+
     <footer>
         <h2>Daily Crumbs</h2>
         <p style="color: #999; font-size: 14px; letter-spacing: 1px;">Trivandrum, Kerala | Artisanal Wholesale & Retail</p>
     </footer>
 
+    <script>
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            const windowHeight = window.innerHeight;
+            const elementVisible = 120; // Triggers when element is 120px from bottom
+
+            reveals.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+
+        // Listen for scroll events
+        window.addEventListener('scroll', revealOnScroll);
+        
+        // Run once on page load to reveal anything already in the viewport
+        revealOnScroll();
+    </script>
 </body>
 </html>
