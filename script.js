@@ -1,209 +1,176 @@
-/* =========================================
-   1. GLOBAL THEME & TYPOGRAPHY
-   ========================================= */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap');
+// --- Cart State (Simulating a database/local storage) ---
+let cartItems = [
+    {
+        id: 1,
+        name: "Classic Butter Croissant",
+        desc: "Freshly baked, flaky layers",
+        price: 120,
+        qty: 2,
+        image: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=150&q=80"
+    },
+    {
+        id: 2,
+        name: "Rustic Sourdough Loaf",
+        desc: "Naturally leavened, 500g",
+        price: 180,
+        qty: 1,
+        image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=150&q=80"
+    }
+];
 
-:root {
-    --bg-cream: #fbf9f6;
-    --text-dark: #2c2a29;
-    --primary-color: #d35400; /* Warm baked crust color */
-    --secondary-color: #f39c12;
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
+let discount = 0;
+
+// --- Initialize Page ---
+document.addEventListener("DOMContentLoaded", () => {
+    renderCart();
+});
+
+// --- Render Cart HTML Dynamically ---
+function renderCart() {
+    const cartContainer = document.getElementById("cart-items");
+    const cartCount = document.getElementById("cart-count");
+    
+    // Clear existing HTML
+    if(cartContainer) cartContainer.innerHTML = "";
+    
+    let totalItems = 0;
+
+    if (cartItems.length === 0) {
+        cartContainer.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 40px;">Your cart is empty. <a href="services.html" style="color:var(--primary-color);">Keep shopping!</a></td></tr>`;
+    } else {
+        cartItems.forEach(item => {
+            totalItems += item.qty;
+            const subtotal = item.price * item.qty;
+            
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>
+                    <div class="item-cell">
+                        <img src="${item.image}" alt="${item.name}" class="item-image">
+                        <div>
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-desc">${item.desc}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="price-text">₹${item.price}</td>
+                <td>
+                    <div class="qty-badge">
+                        <button class="qty-btn" onclick="updateQty(${item.id}, -1)">-</button>
+                        <span>${item.qty}</span>
+                        <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                    </div>
+                </td>
+                <td class="price-text">₹${subtotal}</td>
+                <td><i class="fas fa-trash remove-icon" title="Remove Item" onclick="removeItem(${item.id})"></i></td>
+            `;
+            cartContainer.appendChild(row);
+        });
+    }
+
+    // Update Nav Counter
+    if(cartCount) cartCount.innerText = totalItems;
+    
+    // Recalculate Totals
+    calculateTotals();
 }
 
-body {
-    margin: 0;
-    font-family: var(--font-body);
-    background-color: var(--bg-cream);
-    color: var(--text-dark);
-    -webkit-font-smoothing: antialiased;
+// --- Update Item Quantity ---
+function updateQty(id, change) {
+    const item = cartItems.find(i => i.id === id);
+    if (item) {
+        item.qty += change;
+        if (item.qty <= 0) {
+            removeItem(id); // Remove if qty goes to 0
+        } else {
+            renderCart();
+        }
+    }
 }
 
-/* =========================================
-   2. HEADER & NAVIGATION
-   ========================================= */
-header {
-    background: #fff;
-    text-align: center;
-    padding: 30px 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    border-bottom: 3px solid var(--primary-color);
+// --- Remove Item ---
+function removeItem(id) {
+    cartItems = cartItems.filter(item => item.id !== id);
+    renderCart();
 }
 
-header h1 {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    color: var(--text-dark);
-    letter-spacing: 2px;
+// --- Calculate Prices ---
+function calculateTotals() {
+    let subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    
+    const totalElem = document.getElementById("total-price");
+    const grandTotalElem = document.getElementById("grand-total");
+
+    if(totalElem) totalElem.innerText = subtotal;
+    
+    // Apply discount if exists
+    let grandTotal = subtotal - discount;
+    if (grandTotal < 0) grandTotal = 0; // Prevent negative totals
+    
+    if(grandTotalElem) grandTotalElem.innerText = grandTotal;
 }
 
-header p {
-    color: var(--primary-color);
-    font-style: italic;
-    margin: 5px 0 0 0;
+// --- Apply Promo Code ---
+function applyCoupon() {
+    const codeInput = document.getElementById("coupon-code").value.trim().toUpperCase();
+    
+    if (codeInput === "CRUMBS20") {
+        discount = 50; // Flat ₹50 off for example
+        alert("Success! ₹50 discount applied.");
+    } else if (codeInput === "") {
+        alert("Please enter a coupon code.");
+    } else {
+        discount = 0;
+        alert("Invalid coupon code.");
+    }
+    
+    calculateTotals();
 }
 
-.navbar {
-    background: var(--text-dark);
-    padding: 15px 0;
+// --- Checkout Modal Logic ---
+function checkout() {
+    if (cartItems.length === 0) {
+        alert("Your cart is empty! Add some delicious bakes first.");
+        return;
+    }
+    
+    const modal = document.getElementById("receipt-modal");
+    const receiptContent = document.getElementById("receipt-content");
+    const receiptTotal = document.getElementById("receipt-total");
+    
+    // Build Receipt HTML
+    let receiptHTML = "";
+    cartItems.forEach(item => {
+        receiptHTML += `
+            <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+                <span>${item.qty}x ${item.name}</span>
+                <span>₹${item.price * item.qty}</span>
+            </div>
+        `;
+    });
+
+    if (discount > 0) {
+        receiptHTML += `
+            <div style="display:flex; justify-content:space-between; margin-bottom: 8px; color: green;">
+                <span>Discount</span>
+                <span>-₹${discount}</span>
+            </div>
+        `;
+    }
+
+    receiptContent.innerHTML = receiptHTML;
+    receiptTotal.innerText = `Total: ₹${document.getElementById("grand-total").innerText}`;
+    
+    // Show Modal
+    modal.style.display = "flex";
 }
 
-.navbar ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin: 0;
-    padding: 0;
+function closeReceipt() {
+    const modal = document.getElementById("receipt-modal");
+    modal.style.display = "none";
+    
+    // Clear cart after checkout
+    cartItems = [];
+    discount = 0;
+    renderCart();
 }
-
-.navbar a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: color 0.3s;
-}
-
-.navbar a:hover {
-    color: var(--secondary-color);
-}
-
-/* =========================================
-   3. CART PAGE SPECIFIC STYLES
-   ========================================= */
-.cart-section {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-.cart-section h2 {
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    color: var(--text-dark);
-    margin-bottom: 25px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.cart-layout {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    align-items: flex-start;
-}
-
-.cart-table-container {
-    flex: 2;
-    min-width: 60%;
-    overflow-x: auto;
-}
-
-.cart-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 15px;
-    margin-top: 0;
-}
-
-.cart-table th {
-    text-align: left;
-    padding: 15px;
-    color: #7f8c8d;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    border-bottom: 2px solid #ecf0f1;
-}
-
-.cart-table td {
-    background: #fff;
-    padding: 20px 15px;
-    vertical-align: middle;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.02);
-}
-
-.cart-table td:first-child { border-radius: 12px 0 0 12px; }
-.cart-table td:last-child { border-radius: 0 12px 12px 0; }
-
-.item-cell {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.item-image {
-    width: 70px;
-    height: 70px;
-    border-radius: 10px;
-    object-fit: cover;
-    border: 1px solid #eee;
-}
-
-.item-name {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    font-size: 1.2rem;
-    color: var(--text-dark);
-}
-
-.item-desc {
-    font-size: 0.85rem;
-    color: #95a5a6;
-    margin-top: 5px;
-}
-
-/* Quantity Adjusters */
-.qty-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    padding: 5px 10px;
-    border-radius: 20px;
-    width: fit-content;
-}
-
-.qty-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    color: var(--primary-color);
-    font-size: 1.1rem;
-}
-
-.qty-btn:hover { color: var(--text-dark); }
-
-.price-text {
-    font-weight: bold;
-    color: var(--primary-color);
-    font-size: 1.1rem;
-}
-
-.remove-icon {
-    color: #e74c3c;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
-
-.remove-icon:hover {
-    color: #c0392b;
-    transform: scale(1.1);
-}
-
-/* Summary Box */
-.summary-box {
-    flex: 1;
-    min-width: 300px;
-    background: #fff;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 1
