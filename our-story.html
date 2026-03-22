@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story | Daily Crumbs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="standard-header">
+        <div class="logo">Daily Crumbs</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="services.html">Shop</a>
+            <a href="our-story.html" class="active">Our Story</a>
+            <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+        </nav>
+    </header>
+
+    <main class="page-container">
+        <div class="page-header reveal">
+            <h1>Our Story</h1>
+            <p>From a small kitchen to Trivandrum's favorite artisanal bakery.</p>
+        </div>
+
+        <section class="story-split">
+            <div class="story-text reveal delay-1">
+                <h2>The Pursuit of the Perfect Crumb</h2>
+                <p>Daily Crumbs started with a simple obsession: recreating the perfect, blistered sourdough crust and the impossibly flaky layers of a classic Parisian croissant right here in Kerala.</p>
+                <p>We believe that baking is a science, but feeding people is an art. We refuse to use commercial yeast or artificial dough conditioners. Instead, we rely on time, temperature, and our wild yeast starter to do the heavy lifting.</p>
+                <p>Every loaf is hand-shaped, every pastry is hand-laminated, and every customer is treated like family.</p>
+            </div>
+            <div class="story-image reveal delay-2">
+                <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=800" alt="Baker shaping dough">
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <h2>Daily Crumbs</h2>
+        <p style="color: #999; font-size: 14px; letter-spacing: 1px;">Trivandrum, Kerala | Artisanal Wholesale & Retail</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Scroll Animation Logic
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach((reveal) => {
+                if (reveal.getBoundingClientRect().top < window.innerHeight - 100) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+    </script>
+</body>
+</html>
