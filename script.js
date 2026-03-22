@@ -36,7 +36,7 @@ function renderCart() {
     let totalItems = 0;
 
     if (cartItems.length === 0) {
-        cartContainer.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 40px;">Your cart is empty. <a href="services.html" style="color:var(--primary-color);">Keep shopping!</a></td></tr>`;
+        if(cartContainer) cartContainer.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 40px;">Your cart is empty. <a href="services.html" style="color:var(--primary-color);">Keep shopping!</a></td></tr>`;
     } else {
         cartItems.forEach(item => {
             totalItems += item.qty;
@@ -64,7 +64,7 @@ function renderCart() {
                 <td class="price-text">₹${subtotal}</td>
                 <td><i class="fas fa-trash remove-icon" title="Remove Item" onclick="removeItem(${item.id})"></i></td>
             `;
-            cartContainer.appendChild(row);
+            if(cartContainer) cartContainer.appendChild(row);
         });
     }
 
@@ -158,16 +158,16 @@ function checkout() {
         `;
     }
 
-    receiptContent.innerHTML = receiptHTML;
-    receiptTotal.innerText = `Total: ₹${document.getElementById("grand-total").innerText}`;
+    if(receiptContent) receiptContent.innerHTML = receiptHTML;
+    if(receiptTotal && document.getElementById("grand-total")) receiptTotal.innerText = `Total: ₹${document.getElementById("grand-total").innerText}`;
     
     // Show Modal
-    modal.style.display = "flex";
+    if(modal) modal.style.display = "flex";
 }
 
 function closeReceipt() {
     const modal = document.getElementById("receipt-modal");
-    modal.style.display = "none";
+    if(modal) modal.style.display = "none";
     
     // Clear cart after checkout
     cartItems = [];
