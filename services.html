@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Daily Crumbs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="standard-header">
+        <div class="logo">Daily Crumbs</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="services.html" class="active">Shop</a>
+            <a href="our-story.html">Our Story</a>
+            <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+        </nav>
+    </header>
+
+    <main class="page-container">
+        <div class="page-header reveal">
+            <h1>Our Daily Bakes</h1>
+            <p>Fresh from the oven. Pre-order to guarantee your favorites.</p>
+        </div>
+
+        <section class="shop-grid">
+            <div class="shop-card reveal delay-1">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=600" alt="Butter Croissant">
+                </div>
+                <div class="shop-card-content">
+                    <h3>Classic Butter Croissant</h3>
+                    <p class="desc">Three-day process, 27 layers of French butter.</p>
+                    <div class="price-row">
+                        <span class="price">₹120</span>
+                        <button class="add-btn" onclick="alert('Added to cart!')"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-card reveal delay-2">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?q=80&w=600" alt="Sourdough">
+                </div>
+                <div class="shop-card-content">
+                    <h3>Rustic Sourdough</h3>
+                    <p class="desc">Naturally leavened with our 5-year-old starter.</p>
+                    <div class="price-row">
+                        <span class="price">₹180</span>
+                        <button class="add-btn" onclick="alert('Added to cart!')"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-card reveal delay-3">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=600" alt="Chocolate Cake">
+                </div>
+                <div class="shop-card-content">
+                    <h3>Dark Chocolate Truffle</h3>
+                    <p class="desc">Decadent 70% cocoa with a molten center.</p>
+                    <div class="price-row">
+                        <span class="price">₹250</span>
+                        <button class="add-btn" onclick="alert('Added to cart!')"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <h2>Daily Crumbs</h2>
+        <p style="color: #999; font-size: 14px; letter-spacing: 1px;">Trivandrum, Kerala | Artisanal Wholesale & Retail</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Scroll Animation Logic
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach((reveal) => {
+                if (reveal.getBoundingClientRect().top < window.innerHeight - 100) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+    </script>
+</body>
+</html>
